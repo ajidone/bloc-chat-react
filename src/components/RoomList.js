@@ -19,13 +19,35 @@ class RoomList extends Component {
      });
    }
 
+   createNewRoom(e) {
+     e.preventDefault();
+     const newRoomName = document.getElementById("newRoomName").value;
+
+     if(newRoomName) {
+       this.roomsRef.push({
+         name: newRoomName
+       })
+     }
+   }
+
   render() {
     return (
+      <div>
       <ol>
       {this.state.rooms.map( (room, index) =>
         <li key={index}>{room.name}</li>
       )}
       </ol>
+      <form>
+        <label htmlFor="newRoomName" className="input-label" id="newRoomNameLabel">New Room Name: </label>
+        <input type="text" className="input-roomname" id="newRoomName" />
+        <input type="submit"
+          className="submit-button"
+          id="newRoomSubmit"
+          onClick={this.createNewRoom.bind(this)}
+        />
+      </form>
+      </div>
 
     )
   }
