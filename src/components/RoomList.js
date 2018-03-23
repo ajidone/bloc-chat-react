@@ -19,7 +19,7 @@ class RoomList extends Component {
      });
    }
 
-   createNewRoom(e) {
+   createNewRoom = (e) => {
      e.preventDefault();
      const newRoomName = document.getElementById("newRoomName").value;
 
@@ -33,23 +33,24 @@ class RoomList extends Component {
   render() {
     return (
       <div>
-      <ol>
-      {this.state.rooms.map( (room, index) =>
-        <li key={index}>{room.name}</li>
-      )}
-      </ol>
-      <form>
-        <label htmlFor="newRoomName" className="input-label" id="newRoomNameLabel">New Room Name: </label>
-        <input type="text" className="input-roomname" id="newRoomName" />
-        <input type="submit"
-          className="submit-button"
-          id="newRoomSubmit"
-          onClick={this.createNewRoom.bind(this)}
-        />
-      </form>
+        <ol>
+        {this.state.rooms.map( (room, index) =>
+          <li id={room.key} key={room.key} onClick={this.props.handleRoomSelect}>{room.key + "   " + room.name}</li>
+        )}
+        </ol>
+
+        <form>
+          <label htmlFor="newRoomName" className="input-label" id="newRoomNameLabel">New Room Name: </label>
+          <input type="text" className="input-roomname" id="newRoomName" />
+          <input type="submit"
+            className="submit-button"
+            id="newRoomSubmit"
+            onClick={this.createNewRoom}
+          />
+        </form>
       </div>
 
-    )
+    );
   }
 }
 
