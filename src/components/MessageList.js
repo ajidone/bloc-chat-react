@@ -8,28 +8,52 @@ class MessageList extends Component {
       messages: []
     }
 
-    this.messagesRef = this.props.firebase.database().ref('messages').child(this.props.activeRoom);
+    this.messagesRef = this.props.firebase.database().ref('message/' + this.props.activeRoom);
   }
 
   componentDidMount() {
+    const messageList = [];
+
     this.messagesRef.on('child_added', snapshot => {
-      const messages = snapshot.val();
-      messages.key = snapshot.key;
-      this.setState({messages: this.state.messages.concat( messages )})
+      let message = snapshot.val();
+      message.key = snapshot.key;
+      messageList.push(message);
     });
+    this.setState({messages: messageList});
+  }
+
+  componentWillReceiveProps(newProps) {
+    if(newProps.activeRoom !== this.props.activeRoom) {
+      this.messagesRef = this.props.firebase.database().ref('message/' + newProps.activeRoom);
+      let messageList = [];
+
+      this.messagesRef.on('child_added', snapshot => {
+        let message = snapshot.val();
+        message.key = snapshot.key;
+        messageList.push(message);
+        this.setState({ messages: messageList });
+      });
+
+      if( messageList.length === 0 ) { this.setState({ messages: [] });}
+    }
+
   }
 
   render () {
     return (
-      <section>
-        <h2 className="active-room-label" key={this.props.activeRoom}>{this.props.activeRoom}</h2>
-        <ol>
-          {this.state.messages.map( (message, index) =>
-            <li key={index}>
-              {message.message}
-            </li>
-          )}
-        </ol>
+      <section className="section-message-list">
+      <h2>{this.props.activeRoom}</h2>
+        <table className="table-message-list">
+          <tbody>
+            {this.state.messages.map( (message, index) =>
+              <tr key={index}>
+                <td>{message.content}</td>
+                <td>{message.username}</td>
+                <td>{message.sentAt}</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </section>
     );
   }
