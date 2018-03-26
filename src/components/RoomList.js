@@ -21,13 +21,15 @@ class RoomList extends Component {
 
    createNewRoom = (e) => {
      e.preventDefault();
-     const newRoomName = document.getElementById("newRoomName").value;
+     const newRoomName = document.getElementById('newRoomName').value;
 
      if(newRoomName) {
        this.roomsRef.push({
          name: newRoomName
        })
      }
+
+     document.getElementById('newRoomName').value = "";
    }
 
   render() {
@@ -41,7 +43,12 @@ class RoomList extends Component {
 
         <form>
           <label htmlFor="newRoomName" className="input-label" id="newRoomNameLabel">New Room Name: </label>
-          <input type="text" className="input-roomname" id="newRoomName" />
+          <input
+            type="text" 
+            className="input-roomname"
+            id="newRoomName"
+            placeholder="New room name..."
+           />
           <input type="submit"
             className="submit-button"
             id="newRoomSubmit"

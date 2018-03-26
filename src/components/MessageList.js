@@ -14,11 +14,13 @@ class MessageList extends Component {
   componentDidMount() {
     const messageList = [];
 
-    this.messagesRef.on('child_added', snapshot => {
-      let message = snapshot.val();
-      message.key = snapshot.key;
-      messageList.push(message);
-    });
+    if(this.props.activeRoom) {
+      this.messagesRef.on('child_added', snapshot => {
+        let message = snapshot.val();
+        message.key = snapshot.key;
+        messageList.push(message);
+      });
+    }
 
     this.setState({messages: messageList});
   }
@@ -51,7 +53,7 @@ class MessageList extends Component {
         sentAt: this.props.firebase.database.ServerValue.TIMESTAMP
       })
     }
-    
+
     document.getElementById('newMessageContent').value = "";
   }
 
