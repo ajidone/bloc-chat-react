@@ -23,16 +23,19 @@ class App extends Component {
 
     this.state = {
       activeRoom: null,
-      user: "Guest"
+      user: {username: "Guest", name: "Guest", admin: false},
+      admin: false
     }
   }
 
-  setUser(authResult, login) {
-    if(authResult && login) {
-      const user = authResult.displayName;
-      this.setState({ user: user});
+  setUser(user, login) {
+    if(user && login) {
+      this.setState({
+        user: user
+      });
+
     } else {
-      this.setState({ user: "Guest" });
+      this.setState({ user: {username: "Guest", admin: false} });
     }
   }
 
@@ -50,7 +53,8 @@ class App extends Component {
             <div className="flex-logo">
               <img src= { logo } alt="logo" />
             </div>
-            <span className="header-spacer" />
+            <span className="header-spacer"><h1>Bloc Chat</h1></span>
+            <span className="header-user">{this.state.user.name}</span>
           </div>
         </header>
 
@@ -58,12 +62,13 @@ class App extends Component {
           <div className="sidebar-left">
             <RoomList
               firebase={firebase}
+              user={this.state.user}
               activeRoom={this.state.activeRoom}
               handleRoomSelect={(e) => this.handleRoomSelect(e)}
             />
           </div>
 
-          <main>
+          <main id="message-container">
             <MessageList
               firebase={firebase}
               activeRoom={this.state.activeRoom}
@@ -75,7 +80,8 @@ class App extends Component {
             <User
               firebase={firebase}
               user={this.state.user}
-              setUser={(authResult, login) => this.setUser(authResult, login)}
+              admin
+              setUser={(user, login) => this.setUser(user, login)}
             />
           </div>
         </div>

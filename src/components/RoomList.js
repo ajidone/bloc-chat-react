@@ -5,8 +5,7 @@ class RoomList extends Component {
     super(props);
 
     this.state = {
-      rooms: [],
-      newRoomName: null
+      rooms: []
     }
 
     this.roomsRef = this.props.firebase.database().ref('rooms');
@@ -26,7 +25,6 @@ class RoomList extends Component {
       this.setState({ rooms: roomList });
      });
    }
-
 
    createNewRoom = (e) => {
      e.preventDefault();
@@ -63,46 +61,49 @@ class RoomList extends Component {
 
   render() {
     return (
-      <div>
+      <div className="rooms">
         <section className="room-list">
           <ul>
             {this.state.rooms.map( (room, index) =>
-              <li id={room.key} key={room.key}>
+              <li id={room.key} key={room.key} className={ room.key === this.props.activeRoom ? "active-room-selection" : "inactive-room-selection"}>
                   <span className="room-name" id={"name" + room.key} onClick={this.props.handleRoomSelect}>{room.name}</span>
-                  <span className="room-buttons">
-                    <button
-                      id={"update" + room.key}
-                      className="update-button"
-                      onClick={this.updateRoom}
-                    ><span className="far fa-edit" /></button>
+                  {this.props.user.admin &&
+                    <span className="room-buttons">
+                      <button
+                        id={"update" + room.key}
+                        className="update-button"
+                        onClick={this.updateRoom}
+                      ><span className="far fa-edit" /></button>
 
-                    <button
-                      id={"delete" + room.key}
-                      className="delete-button"
-                      onClick={this.deleteRoom}
-                    ><span className="far fa-trash-alt" /></button>
-                  </span>
+                      <button
+                        id={"delete" + room.key}
+                        className="delete-button"
+                        onClick={this.deleteRoom}
+                      ><span className="far fa-trash-alt" /></button>
+                    </span>
+                  }
                 </li>
             )}
           </ul>
         </section>
 
-
-        <form className="new-room-form">
-          <h4>Create a New Room</h4>
-          <label htmlFor="newRoomName" className="input-label" id="newRoomNameLabel">New Room Name: </label>
-          <input
-            type="text"
-            className="input-roomname"
-            id="newRoomName"
-            placeholder="New room name..."
-           />
-          <input type="submit"
-            className="submit-button"
-            id="newRoomSubmit"
-            onClick={this.createNewRoom}
-          />
-        </form>
+        {this.props.user.admin &&
+          <form className="new-room-form">
+            <h4>Create a New Room</h4>
+            <label htmlFor="newRoomName" className="input-label" id="newRoomNameLabel">New Room Name: </label>
+            <input
+              type="text"
+              className="input-roomname"
+              id="newRoomName"
+              placeholder="New room name..."
+             />
+            <input type="submit"
+              className="submit-button"
+              id="newRoomSubmit"
+              onClick={this.createNewRoom}
+            />
+          </form>
+        }
       </div>
 
     );

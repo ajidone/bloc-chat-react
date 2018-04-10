@@ -59,7 +59,7 @@ class MessageList extends Component {
       this.messagesRef.push({
         content: newMessage,
         roomId: this.props.activeRoom,
-        username: this.props.user,
+        username: this.props.user.username,
         sentAt: this.props.firebase.database.ServerValue.TIMESTAMP
       })
     }
@@ -96,6 +96,9 @@ class MessageList extends Component {
                     <span className="message-row-username">{message.username}</span>
                     <span className="message-row-ts">{message.sentAt}</span>
                   </div>
+                  { ((message.username === this.props.user.username && this.props.user.username !== "Guest") ||
+                    this.props.user.admin)
+                   &&
                   <div className="message-row-btns">
                     <span>
                       <button
@@ -112,6 +115,7 @@ class MessageList extends Component {
                       ><span className="far fa-trash-alt" /></button>
                     </span>
                   </div>
+                }
                 </div>
               )}
           </section>
