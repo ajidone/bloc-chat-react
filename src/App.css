@@ -1,24 +1,150 @@
-.App {
+@media screen and (min-width: 550px) {
+  body {
+    display: flex;
+  }
+}
+
+* {
+  font-family: Verdana;
+}
+
+
+header {
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  right: 0;
+  height: 65px;
+  background-color: #4d5e7c;
+  color: #FFFFFF;
+  padding: 15px;
+}
+
+.flex-header {
+  display: flex;
+}
+
+.flex-logo {
+  flex-basis: 10%;
   text-align: center;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+.header-spacer {
+  flex-basis: 70%
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+img {
+  width: 70px;
+  height: 70px;
 }
 
-.App-intro {
-  font-size: large;
+.section-user {
+  flex-basis: 20%;
+  text-align: right;
+}
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 95px;
+  bottom: 0;
+  width: 200px;
+  padding: 15px;
+  background-color: #edf2fc;
+  border-right: 2px solid #000;
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+main {
+  position: absolute;
+  left: 232px;
+  right: 0;
+  top: 95px;
+  bottom: 0px;
+  background-color: #f9fbff;
+}
+
+.room-list-table {
+  display: flex;
+}
+
+ td {
+   padding-bottom: 5px;
+   border-bottom: 1px solid black;
+}
+
+.new-room-form {
+    border-top: 2px dashed grey;
+    margin-top: 30px;
+    text-align: center;
+}
+
+.section-message-list {
+  margin-bottom: 35px;
+}
+
+.message-row {
+  display: flex;
+  border-bottom: 1px solid rgba(0, 0, 0, .3);
+  padding: 3px 0 3px 0;
+}
+
+.message-row-content {
+  font-size: 14px;
+  flex-basis: 75%;
+  padding: 5px;
+}
+
+.message-row-metadata {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 20%;
+  padding-right: 15px;
+}
+
+.message-row-username {
+  color: #21385e;
+  font-size: 12px;
+  text-align: right;
+}
+
+.message-row-ts {
+  font-size: 12px;
+  text-align: right;
+  color: #21385e;
+}
+
+.message-row-btns {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 5%;
+  padding-right: 0 5px 0 5px;
+  align-items: center;
+}
+
+.new-messages {
+  position: fixed;
+  bottom: 0px;
+  left: 232px;
+  right: 0px;
+  height: 35px;
+  background-color: #FFF;
+}
+
+.new-message-input {
+  width: 84%;
+  height: 30px;
+  font-size: 14px;
+}
+
+.message-submit-button {
+  -webkit-appearance: none;
+  position: absolute;
+  right: 0px;
+  width: 16%;
+  height: 35px;
+  background-color:#0d2f66;
+  color:#FFF;
+  font-weight:bold;
+  border: solid #0d2f66 2px;
+  font-size: 14px;
+  vertical-align: top;
 }

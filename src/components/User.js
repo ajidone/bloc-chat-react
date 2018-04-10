@@ -1,9 +1,25 @@
 import React, { Component } from 'react';
 
 class User extends Component {
+  constructor(props) {
+    super(props);
+
+    this.usersRef = this.props.firebase.database().ref('users');
+  }
+
   componentDidMount() {
     this.props.firebase.auth().onAuthStateChanged( user => {
       this.props.setUser(user, true);
+
+      this.usersRef.on('value', snapshot => {
+        //keeps erroring on sign out because user is empty on auth state changed
+        snapshot.forEach( usr => {
+        /*  if(usr.val().email === user.email) {
+            console.log("true");
+          }*/console.log(1);
+        });
+
+      });
     });
   }
 
@@ -20,13 +36,17 @@ class User extends Component {
   render() {
     return (
       <section className="section-user">
-        <h2>{this.props.user}</h2>
-        <button
-          className="button-sign-in"
-          onClick={() => this.signInWithPopup()}>Sign In</button>
-        <button
-          className="button-sign-in"
-          onClick={() => this.signOut()}>Sign Out</button>
+        <p>{this.props.user}</p>
+        {
+          this.props.user === "Guest" ?
+          <button
+            className="button-sign-in"
+            onClick={() => this.signInWithPopup()}>Sign In</button>
+          :
+          <button
+            className="button-sign-out"
+            onClick={() => this.signOut()}>Sign Out</button>
+          }
       </section>
     )
   }

@@ -12,32 +12,42 @@ class MessageList extends Component {
   }
 
   componentDidMount() {
-    const messageList = [];
-
     if(this.props.activeRoom) {
-      this.messagesRef.on('child_added', snapshot => {
-        let message = snapshot.val();
-        message.key = snapshot.key;
-        messageList.push(message);
+      this.messagesRef.on('value', snapshot => {
+        const messageList = [];
+
+        snapshot.forEach( message => {
+         messageList.push({
+            key: message.key,
+            content: message.val().content,
+            roomId: message.val().roomId,
+            sentAt: message.val().sentAt,
+            username: message.val().username,
+          });
+        });
+        this.setState({ messages: messageList});
       });
     }
-
-    this.setState({messages: messageList});
   }
 
   componentWillReceiveProps(newProps) {
     if(newProps.activeRoom !== this.props.activeRoom) {
       this.messagesRef = this.props.firebase.database().ref('message/' + newProps.activeRoom);
-      let messageList = [];
 
-      this.messagesRef.on('child_added', snapshot => {
-        let message = snapshot.val();
-        message.key = snapshot.key;
-        messageList.push(message);
-        this.setState({ messages: messageList });
+      this.messagesRef.on('value', snapshot => {
+        const messageList = [];
+
+        snapshot.forEach( message => {
+         messageList.push({
+            key: message.key,
+            content: message.val().content,
+            roomId: message.val().roomId,
+            sentAt: message.val().sentAt,
+            username: message.val().username,
+          });
+        });
+        this.setState({ messages: messageList});
       });
-
-      if( messageList.length === 0 ) { this.setState({ messages: [] });}
     }
   }
 
@@ -57,36 +67,71 @@ class MessageList extends Component {
     document.getElementById('newMessageContent').value = "";
   }
 
+  updateMessage = (e) => {
+    const updateMessageKey = document.getElementById(e.target.id).parentNode.parentNode.parentNode.id;
+    const oldMessageContent = this.state.messages.find( message => message.key === updateMessageKey)
+    const updateMessageContent = window.prompt("Please enter a new message:", oldMessageContent.content);
+
+    if(updateMessageKey) {
+      this.messagesRef.child(updateMessageKey).update({content: updateMessageContent});
+    }
+  }
+
+  deleteMessage = (e) => {
+    const deleteMessageKey = document.getElementById(e.target.id).parentNode.parentNode.parentNode.id;
+
+    if(deleteMessageKey) {
+      this.messagesRef.child(deleteMessageKey).remove()
+    }
+  }
+
   render () {
     return (
-      <section className="messages">
-        <section className="section-message-list">
-        <h2>{this.props.activeRoom}</h2>
-          <table className="table-message-list">
-            <tbody>
+        <section className="messages">
+          <section className="section-message-list">
               {this.state.messages.map( (message, index) =>
-                <tr key={index}>
-                  <td>{message.content}</td>
-                  <td>{message.username}</td>
-                  <td>{message.sentAt}</td>
-                </tr>
+                <div id={message.key} key={index} className="message-row">
+                  <span className="message-row-content">{message.content}</span>
+                  <div className="message-row-metadata">
+                    <span className="message-row-username">{message.username}</span>
+                    <span className="message-row-ts">{message.sentAt}</span>
+                  </div>
+                  <div className="message-row-btns">
+                    <span>
+                      <button
+                        id={"update" + message.key}
+                        className="update-button"
+                        onClick={this.updateMessage}
+                      >Edit</button>
+                    </span>
+                    <span>
+                      <button
+                        id={"delete" + message.key}
+                        className="delete-button"
+                        onClick={this.deleteMessage}
+                      >X</button>
+                    </span>
+                  </div>
+                </div>
               )}
-            </tbody>
-          </table>
-        </section>
-        <section className="new-messages">
-          <input
-            type="text"
-            placeholder="Write your message here..."
-            className="new-message-input"
-            id="newMessageContent"
-          />
-          <input type="submit"
-            className="submit-button"
-            id="newMessageSubmit"
-            onClick={this.createNewMessage}
-          />
-        </section>
+          </section>
+          { this.props.activeRoom &&
+          <section className="new-messages">
+              <form>
+                <input
+                  type="text"
+                  placeholder="Write your message here..."
+                  className="new-message-input"
+                  id="newMessageContent"
+                />
+                <input type="submit"
+                  className="message-submit-button"
+                  id="newMessageSubmit"
+                  onClick={this.createNewMessage}
+                />
+              </form>
+          </section>
+        }
       </section>
     );
   }
