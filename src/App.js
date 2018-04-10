@@ -37,7 +37,8 @@ class App extends Component {
   }
 
   handleRoomSelect(e) {
-    const activeRoomKey = document.getElementById(e.target.id).parentNode.parentNode.id;
+    const activeRoomKey = e.target.id.replace("name","");
+
     this.setState({ activeRoom: activeRoomKey });
   }
 
@@ -50,29 +51,35 @@ class App extends Component {
               <img src= { logo } alt="logo" />
             </div>
             <span className="header-spacer" />
+          </div>
+        </header>
+
+        <div className="content-wrapper">
+          <div className="sidebar-left">
+            <RoomList
+              firebase={firebase}
+              activeRoom={this.state.activeRoom}
+              handleRoomSelect={(e) => this.handleRoomSelect(e)}
+            />
+          </div>
+
+          <main>
+            <MessageList
+              firebase={firebase}
+              activeRoom={this.state.activeRoom}
+              user={this.state.user}
+            />
+          </main>
+
+          <div className="sidebar-right">
             <User
               firebase={firebase}
               user={this.state.user}
               setUser={(authResult, login) => this.setUser(authResult, login)}
             />
           </div>
-        </header>
-
-        <div className="sidebar">
-          <RoomList
-            firebase={firebase}
-            activeRoom={this.state.activeRoom}
-            handleRoomSelect={(e) => this.handleRoomSelect(e)}
-          />
         </div>
 
-        <main>
-          <MessageList
-            firebase={firebase}
-            activeRoom={this.state.activeRoom}
-            user={this.state.user}
-          />
-        </main>
       </div>
     );
   }

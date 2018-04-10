@@ -44,7 +44,7 @@ class RoomList extends Component {
    }
 
    updateRoom = (e) => {
-     const updateRoomKey = document.getElementById(e.target.id).parentNode.parentNode.id;
+     const updateRoomKey = e.target.parentNode.id.replace("update","");
      const updateRoomName = window.prompt("Please enter a new room name:", "New room name...");
 
      if(updateRoomKey) {
@@ -53,7 +53,7 @@ class RoomList extends Component {
    }
 
    deleteRoom = (e) => {
-     const deleteRoomKey = document.getElementById(e.target.id).parentNode.parentNode.id;
+     const deleteRoomKey = e.target.parentNode.id.replace("delete","");
 
      if(deleteRoomKey) {
        this.roomsRef.child(deleteRoomKey).remove()
@@ -64,31 +64,29 @@ class RoomList extends Component {
   render() {
     return (
       <div>
-        <table className="room-list-table">
-          <tbody>
-              {this.state.rooms.map( (room, index) =>
-                <tr id={room.key} key={room.key} >
-                  <td>
-                    <span id={"name" + room.key} onClick={this.props.handleRoomSelect}>{room.name}</span>
-                  </td>
-                  <td>
+        <section className="room-list">
+          <ul>
+            {this.state.rooms.map( (room, index) =>
+              <li id={room.key} key={room.key}>
+                  <span className="room-name" id={"name" + room.key} onClick={this.props.handleRoomSelect}>{room.name}</span>
+                  <span className="room-buttons">
                     <button
                       id={"update" + room.key}
                       className="update-button"
                       onClick={this.updateRoom}
-                    >Edit</button>
-                  </td>
-                  <td>
+                    ><span className="far fa-edit" /></button>
+
                     <button
                       id={"delete" + room.key}
                       className="delete-button"
                       onClick={this.deleteRoom}
-                    >Delete</button>
-                  </td>
-                </tr>
-              )}
-          </tbody>
-        </table>
+                    ><span className="far fa-trash-alt" /></button>
+                  </span>
+                </li>
+            )}
+          </ul>
+        </section>
+
 
         <form className="new-room-form">
           <h4>Create a New Room</h4>

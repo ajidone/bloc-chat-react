@@ -4,22 +4,32 @@ class User extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      users: []
+    };
+
     this.usersRef = this.props.firebase.database().ref('users');
   }
 
   componentDidMount() {
     this.props.firebase.auth().onAuthStateChanged( user => {
       this.props.setUser(user, true);
+    });
 
-      this.usersRef.on('value', snapshot => {
-        //keeps erroring on sign out because user is empty on auth state changed
-        snapshot.forEach( usr => {
-        /*  if(usr.val().email === user.email) {
-            console.log("true");
-          }*/console.log(1);
+    this.usersRef.on('value', snapshot => {
+      const userList = [];
+
+      snapshot.forEach( usr => {
+        userList.push({
+          key: usr.key,
+          name: usr.val().name,
+          admin: usr.val().admin,
+          email: usr.val().email,
+          username: usr.val().username
         });
-
       });
+
+      this.setState({ users: userList});
     });
   }
 
@@ -35,18 +45,31 @@ class User extends Component {
 
   render() {
     return (
-      <section className="section-user">
-        <p>{this.props.user}</p>
-        {
-          this.props.user === "Guest" ?
-          <button
-            className="button-sign-in"
-            onClick={() => this.signInWithPopup()}>Sign In</button>
-          :
-          <button
-            className="button-sign-out"
-            onClick={() => this.signOut()}>Sign Out</button>
-          }
+      <section className="user">
+        <section className="user-login">
+          <div className="active-user">
+            <strong>{this.props.user}</strong>
+          </div>
+          {
+            this.props.user === "Guest" ?
+            <button
+              className="button-sign-in"
+              onClick={() => this.signInWithPopup()}>Sign In</button>
+            :
+            <button
+              className="button-sign-out"
+              onClick={() => this.signOut()}>Sign Out</button>
+            }
+        </section>
+        <section className="user-list">
+      			<ul>
+            {this.state.users.map ( (user, index) =>
+              <li id={user.key} key={index}>
+                {user.name}
+              </li>
+            )}
+      			</ul>
+        </section>
       </section>
     )
   }

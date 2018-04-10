@@ -68,7 +68,7 @@ class MessageList extends Component {
   }
 
   updateMessage = (e) => {
-    const updateMessageKey = document.getElementById(e.target.id).parentNode.parentNode.parentNode.id;
+    const updateMessageKey = e.target.parentNode.id.replace("update","");
     const oldMessageContent = this.state.messages.find( message => message.key === updateMessageKey)
     const updateMessageContent = window.prompt("Please enter a new message:", oldMessageContent.content);
 
@@ -78,7 +78,7 @@ class MessageList extends Component {
   }
 
   deleteMessage = (e) => {
-    const deleteMessageKey = document.getElementById(e.target.id).parentNode.parentNode.parentNode.id;
+    const deleteMessageKey = e.target.parentNode.id.replace("delete","");
 
     if(deleteMessageKey) {
       this.messagesRef.child(deleteMessageKey).remove()
@@ -102,14 +102,14 @@ class MessageList extends Component {
                         id={"update" + message.key}
                         className="update-button"
                         onClick={this.updateMessage}
-                      >Edit</button>
+                      ><span className="far fa-edit" /></button>
                     </span>
                     <span>
                       <button
                         id={"delete" + message.key}
                         className="delete-button"
                         onClick={this.deleteMessage}
-                      >X</button>
+                      ><span className="far fa-trash-alt" /></button>
                     </span>
                   </div>
                 </div>
