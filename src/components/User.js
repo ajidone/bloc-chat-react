@@ -21,7 +21,9 @@ class User extends Component {
           name: usr.val().name,
           admin: usr.val().admin,
           email: usr.val().email,
-          username: usr.val().username
+          username: usr.val().username,
+          online: usr.val().online,
+          activeRoom: usr.val().activeRoom
         });
       });
 
@@ -34,17 +36,25 @@ class User extends Component {
                 admin: false,
                 email: user.email,
                 name: user.displayName,
-                username: user.displayName
+                username: user.displayName,
+                online: true,
+                activeRoom: this.props.activeRoom
               };
 
-         this.props.setUser(userInfo, true);
+        this.props.setUser(userInfo, true);
        }
     });
 
     window.addEventListener("beforeunload", (ev) =>
     {
-        this.props.firebase.auth().signOut();
-        this.props.setUser(null, false);
+      const signOutUser = {
+          online: false,
+          activeRoom: ""
+        };
+
+      this.usersRef.child(this.props.user.key).update(signOutUser);
+      this.props.firebase.auth().signOut();
+      this.props.setUser(null, false);
     });
   }
 
@@ -56,6 +66,7 @@ class User extends Component {
       const userInfo = this.state.users.find( usr => usr.email === newProps.user.email);
 
       if(userInfo) {
+        this.usersRef.child(userInfo.key).update({ online: true, activeRoom: this.props.activeRoom });
         this.props.setUser(userInfo, true);
 
       } else {
@@ -65,7 +76,9 @@ class User extends Component {
             lastLoginTs: this.props.firebase.database.ServerValue.TIMESTAMP,
             email: newProps.user.email,
             name: newProps.user.name,
-            username: newProps.user.username
+            username: newProps.user.username,
+            online: true,
+            activeRoom: this.props.activeRoom
           };
 
         const newUserRef = this.usersRef.push(newUser);
@@ -73,6 +86,10 @@ class User extends Component {
 
         this.props.setUser(newUser, true);
       }
+    }
+
+    if((newProps.activeRoom !== this.props.activeRoom) && this.props.user.name !== "Guest") {
+      this.usersRef.child(this.props.user.key).update({ activeRoom: this.props.activeRoom });
     }
   }
 
@@ -82,6 +99,15 @@ class User extends Component {
   }
 
   signOut() {
+    const signOutUser = {
+        online: false,
+        activeRoom: ""
+      };
+
+    if(this.props.user.key) {
+      this.usersRef.child(this.props.user.key).update(signOutUser);
+    }
+
     this.props.firebase.auth().signOut();
     this.props.setUser(null, false);
   }
@@ -129,24 +155,35 @@ deleteUser = (e) => {
         </section>
         <section className="user-list">
       			<ul>
+
+              <li className="show-all-users-li">
+                <label htmlFor="show-all-check" id="show-all-label">Show all users?</label>
+                <input type="checkbox" id="show-all-check"/>
+              </li>
+
             {this.state.users.map ( (user, index) =>
-              <li id={user.key} key={index}>
-                {user.username}
+              <li id={user.key} key={index} className={user.activeRoom === this.props.activeRoom ? "active-user" : "inactive-user"}>
+                <div className="user-list-name">
+                  <span className={user.online ? "fas fa-circle" : "far fa-circle"} />
+                  {user.username}
+                </div>
+
                 { ((user.key === this.props.user.key || this.props.user.admin === true) ||
                   this.props.user.admin) &&
-                <div className="user-buttons">
-                  <button
-                    id={"update" + user.key}
-                    className="update-button"
-                    onClick={this.updateUser}
-                  ><span className="far fa-edit" /></button>
-                  <button
-                    id={"delete" + user.key}
-                    className="delete-button"
-                    onClick={this.deleteUser}
-                  ><span className="far fa-trash-alt" /></button>
-                </div>
-              }
+                    <div className="user-buttons">
+                      <button
+                        id={"update" + user.key}
+                        className="update-button"
+                        onClick={this.updateUser}
+                      ><span className="far fa-edit" /></button>
+                      <button
+                        id={"delete" + user.key}
+                        className="delete-button"
+                        onClick={this.deleteUser}
+                      ><span className="far fa-trash-alt" /></button>
+                    </div>
+                }
+
               </li>
             )}
       			</ul>

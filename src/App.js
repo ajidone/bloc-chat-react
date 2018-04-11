@@ -23,8 +23,7 @@ class App extends Component {
 
     this.state = {
       activeRoom: null,
-      user: {username: "Guest", name: "Guest", admin: false},
-      admin: false
+      user: {username: "Guest", name: "Guest", admin: false}
     }
   }
 
@@ -35,7 +34,7 @@ class App extends Component {
       });
 
     } else {
-      this.setState({ user: {username: "Guest", admin: false} });
+      this.setState({ user: {username: "Guest", name: "Guest", admin: false} });
     }
   }
 
@@ -73,6 +72,7 @@ class App extends Component {
               firebase={firebase}
               activeRoom={this.state.activeRoom}
               user={this.state.user}
+              handleTyping={(type) => this.handleTyping(type)}
             />
           </main>
 
@@ -80,7 +80,7 @@ class App extends Component {
             <User
               firebase={firebase}
               user={this.state.user}
-              admin
+              activeRoom={this.state.activeRoom}
               setUser={(user, login) => this.setUser(user, login)}
             />
           </div>

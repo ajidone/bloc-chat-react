@@ -85,6 +85,8 @@ class MessageList extends Component {
     }
   }
 
+
+
   render () {
     return (
         <section className="messages">
@@ -127,6 +129,8 @@ class MessageList extends Component {
                   placeholder="Write your message here..."
                   className="new-message-input"
                   id="newMessageContent"
+                  onKeyDown={(e) => this.handleKeyDown(e)}
+                  tabIndex="0"
                 />
                 <input type="submit"
                   className="message-submit-button"
