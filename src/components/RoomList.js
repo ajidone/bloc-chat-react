@@ -67,7 +67,7 @@ class RoomList extends Component {
 
      if(deleteRoomKey) {
        this.roomsRef.child(deleteRoomKey).remove()
-       this.props.firebase.database().ref('message/' + this.props.activeRoom).remove();
+       this.props.firebase.database().ref('message/' + this.props.activeRoom.key).remove();
      }
    }
 
@@ -77,9 +77,9 @@ class RoomList extends Component {
         <section className="room-list">
           <ul>
             {this.state.rooms.map( (room, index) =>
-              <li id={room.key} key={room.key} className={ room.key === this.props.activeRoom ? "active-room-selection" : "inactive-room-selection"}>
-                  <span className="room-name" id={"name" + room.key} onClick={this.props.handleRoomSelect}>{room.name}</span>
-                  {true && //this.props.user.admin
+              <li id={room.key} key={room.key} className={ room.key === this.props.activeRoom.key ? "active-room-selection" : "inactive-room-selection"}>
+                  <span className="room-name" roomkey={room.key} roomname={room.name} onClick={this.props.handleRoomSelect}>{room.name}</span>
+                  {this.props.user.admin &&
                     <span className="room-buttons">
                       <button
                         id={"update" + room.key}
@@ -99,7 +99,7 @@ class RoomList extends Component {
           </ul>
         </section>
 
-        {true && //this.props.user.admin
+        {this.props.user.admin &&
           <form className="new-room-form">
             <h4>Create a New Room</h4>
             <label htmlFor="new-room-name" className="input-label" id="new-room-name-label">New Room Name: </label>

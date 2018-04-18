@@ -7,7 +7,7 @@ class UserAuth extends Component {
 
     this.state = {
       userAuth: {},
-      newLogin: false
+      newLogin: true
     }
 
     this.usersRef = this.props.firebase.database().ref('users');
@@ -22,11 +22,11 @@ class UserAuth extends Component {
           email: "Guest",
           username: "Guest"
         }
+
+        this.props.setUser(authResult);
       }
-      console.log(authResult)
 
       this.setState({ userAuth: authResult })
-      this.props.setUser(authResult);
     });
   }
 
@@ -37,14 +37,21 @@ class UserAuth extends Component {
   }
 
   signOut() {
+    if(this.props.user.key) {
+      this.usersRef.child(this.props.user.key).update({online: false});
+    }
+
     this.props.firebase.auth().signOut();
-    this.setState({ newLogin: false})
   }
 
   handleRegistration = (userData, newUser) => {
     if(newUser) {
       const newUserRef = this.usersRef.push(userData);
       userData.key = newUserRef.key;
+    }
+
+    if(userData.key && this.state.newLogin) {
+      this.usersRef.child(userData.key).update({online: true});
     }
 
     this.setState({ newLogin: false })

@@ -22,8 +22,8 @@ class App extends Component {
     super(props);
 
     this.state = {
-      activeRoom: null,
-      user: { name: "Guest", email: "Guest", photoUrl: "./img/default.png"}
+      activeRoom: {key: null, name: null},
+      user: { name: "Guest", email: "Guest", admin: false, photoUrl: "./img/default.png"}
     }
   }
 
@@ -32,8 +32,14 @@ class App extends Component {
   }
 
   handleRoomSelect = (e) => {
-    const activeRoomKey = e.target.id;
-    this.setState({ activeRoom: activeRoomKey });
+    const activeRoomKey = e.target.getAttribute('roomkey');
+    const activeRoomName = e.target.getAttribute('roomname');
+    const activeRoom = {
+      key: activeRoomKey,
+      name: activeRoomName
+    }
+
+    this.setState({ activeRoom: activeRoom });
   }
 
   render() {
@@ -49,6 +55,7 @@ class App extends Component {
       <RoomList
           firebase={firebase}
           activeRoom={this.state.activeRoom}
+          user={this.state.user}
           handleRoomSelect={this.handleRoomSelect}
         />
         <MessageList

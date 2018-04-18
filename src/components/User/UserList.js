@@ -81,18 +81,21 @@ class UserList extends Component {
                 {user.username +"  "}
               </span>
 
-              <span className="user-buttons">
-                <button
-                  id={"update" + user.key}
-                  className="update-button"
-                  onClick={this.updateUser}
-                ><span className="far fa-edit" /></button>
-                <button
-                  id={"delete" + user.key}
-                  className="delete-button"
-                  onClick={this.deleteUser}
-                ><span className="far fa-trash-alt" /></button>
-              </span>
+              { ((user.email === this.props.user.email && this.props.user.email !== "Guest") ||
+                this.props.user.admin) &&
+                <span className="user-buttons">
+                  <button
+                    id={"update" + user.key}
+                    className="update-button"
+                    onClick={this.updateUser}
+                  ><span className="far fa-edit" /></button>
+                  <button
+                    id={"delete" + user.key}
+                    className="delete-button"
+                    onClick={this.deleteUser}
+                  ><span className="far fa-trash-alt" /></button>
+                </span>
+              }
             </li>
           )}
         </ul>

@@ -35,8 +35,7 @@ class UserRegister extends Component {
               online: true,
               createdTs: this.props.firebase.database.ServerValue.TIMESTAMP
             }
-            console.log(newUser.email)
-            console.log(this.props.newLogin);
+
             this.props.handleRegistration(userData, true);
           }
         });
