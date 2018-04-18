@@ -3,7 +3,8 @@ import * as firebase from 'firebase';
 import './App.css';
 import RoomList from './components/RoomList';
 import MessageList from './components/MessageList';
-import User from './components/User';
+import UserAuth from './components/User/UserAuth';
+import UserList from './components/User/UserList';
 
 // Initialize Firebase
 var config = {
@@ -22,20 +23,15 @@ class App extends Component {
 
     this.state = {
       activeRoom: null,
-      user: "Guest"
+      user: { name: "Guest", email: "Guest", photoUrl: "./img/default.png"}
     }
   }
 
-  setUser(authResult, login) {
-    if(authResult && login) {
-      const user = authResult.displayName;
-      this.setState({ user: user});
-    } else {
-      this.setState({ user: "Guest" });
-    }
+  setUser = (userData) => {
+    this.setState({ user: userData});
   }
 
-  handleRoomSelect(e) {
+  handleRoomSelect = (e) => {
     const activeRoomKey = e.target.id;
     this.setState({ activeRoom: activeRoomKey });
   }
@@ -43,17 +39,24 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-      <User
+
+      <UserAuth
         firebase={firebase}
+        activeRoom={this.state.activeRoom}
         user={this.state.user}
-        setUser={(authResult, login) => this.setUser(authResult, login)}
+        setUser={this.setUser}
       />
       <RoomList
           firebase={firebase}
           activeRoom={this.state.activeRoom}
-          handleRoomSelect={(e) => this.handleRoomSelect(e)}
+          handleRoomSelect={this.handleRoomSelect}
         />
         <MessageList
+          firebase={firebase}
+          activeRoom={this.state.activeRoom}
+          user={this.state.user}
+        />
+        <UserList
           firebase={firebase}
           activeRoom={this.state.activeRoom}
           user={this.state.user}
