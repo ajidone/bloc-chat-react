@@ -125,20 +125,22 @@ class MessageList extends Component {
                   { ((message.username === this.props.user.username && this.props.user.username !== "Guest") ||
                     this.props.user.admin)
                    &&
-                  <span className="message-row-btns">
-                    <span>
-                      <button
-                        id={"update" + message.key}
-                        className="update-button"
-                        onClick={this.updateMessage}
-                      ><span className="far fa-edit" /></button>
-                    </span>
-                    <span>
-                      <button
-                        id={"delete" + message.key}
-                        className="delete-button"
-                        onClick={this.deleteMessage}
-                      ><span className="far fa-trash-alt" /></button>
+                   <span className="message-row-pull-right">
+                    <span className="message-row-btns">
+                      <span>
+                        <button
+                          id={"update" + message.key}
+                          className="update-button"
+                          onClick={this.updateMessage}
+                        ><span className="far fa-edit" /></button>
+                      </span>
+                      <span>
+                        <button
+                          id={"delete" + message.key}
+                          className="delete-button"
+                          onClick={this.deleteMessage}
+                        ><span className="far fa-trash-alt" /></button>
+                      </span>
                     </span>
                   </span>
                 }

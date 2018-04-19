@@ -46,6 +46,9 @@ button {
   -webkit-appearance: none;
   border: none;
   color: rgba(0,0,0,0.2);
+  padding: 0px;
+  margin: 0px;
+  background-color: transparent;
 }
 
 button:hover {
@@ -146,16 +149,6 @@ margin-right: 5px;
 
 
 
-
-
-.room-user-col, .alert-col {
-  align-items: center;
-}
-
-.message-col {
-  min-width: 480px;
-}
-
 .message-panel {
   height: 95vh;\
   overflow-y: auto;
@@ -167,28 +160,34 @@ margin-right: 5px;
   overflow-y: auto;
   overflow-x: hidden;
   margin-bottom: 20px;
-  min-width: 400px;
 }
 
 .message-row {
   display: flex;
   border-bottom: 1px solid rgba(0, 0, 0, .3);
   padding: 3px 0 3px 0;
+  position: relative;
 }
 
 .message-row-content {
   text-align: left;
   font-size: 14px;
-  flex-basis: 75%;
   padding: 5px;
   word-wrap: break-word;
+  margin-bottom: 7px;
 }
 
+.message-row-pull-right {
+  position: absolute;
+  right: 5px;
+}
 .message-row-metadata {
+  position: absolute;
+  right: 25px;
   display: flex;
   flex-direction: column;
   flex-basis: 20%;
-  padding-right: 3px;
+  padding-right: 7px;
 }
 
 .message-row-username {
@@ -207,7 +206,6 @@ margin-right: 5px;
   display: flex;
   flex-direction: column;
   flex-basis: 5%;
-  align-items: center;
 }
 
 .typing-alert {
