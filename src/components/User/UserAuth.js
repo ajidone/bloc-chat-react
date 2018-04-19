@@ -28,9 +28,20 @@ class UserAuth extends Component {
 
         this.props.setUser(authResult);
       }
-console.log(authResult)
+
       this.setState({ userAuth: authResult })
     });
+
+    window.addEventListener("beforeunload", (ev) => {
+      if(this.props.user.key) {
+        this.usersRef.child(this.props.user.key).update({
+          online: false,
+          activeRoom: ""
+        });
+
+        this.props.firebase.auth().signOut();
+      }
+    })
   }
 
   signInWithPopup() {
