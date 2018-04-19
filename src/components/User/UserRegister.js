@@ -21,6 +21,7 @@ class UserRegister extends Component {
               admin: user.admin,
               email: user.email,
               username: user.username,
+              photoUrl: user.photoUrl,
               online: user.online,
               activeRoom: user.activeRoom
             }
@@ -32,6 +33,7 @@ class UserRegister extends Component {
               admin: true,
               email: newUser.email,
               username: newUser.displayName,
+              photoUrl: newUser.photoURL,
               online: true,
               createdTs: this.props.firebase.database.ServerValue.TIMESTAMP
             }
@@ -43,14 +45,11 @@ class UserRegister extends Component {
     }
   }
 
-
-
   render() {
     return (
-      <section className="user-register">
-      <button
-        className="button-register">Register</button>
-      </section>
+      <button className="button-register">
+        Register
+      </button>
     )
   }
 }

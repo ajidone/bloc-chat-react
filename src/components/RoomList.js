@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Panel } from 'react-bootstrap';
 
 class RoomList extends Component {
   constructor(props) {
@@ -74,48 +75,54 @@ class RoomList extends Component {
   render() {
     return (
       <div className="rooms">
-        <section className="room-list">
-          <ul>
-            {this.state.rooms.map( (room, index) =>
-              <li id={room.key} key={room.key} className={ room.key === this.props.activeRoom.key ? "active-room-selection" : "inactive-room-selection"}>
-                  <span className="room-name" roomkey={room.key} roomname={room.name} onClick={this.props.handleRoomSelect}>{room.name}</span>
-                  {this.props.user.admin &&
-                    <span className="room-buttons">
-                      <button
-                        id={"update" + room.key}
-                        className="update-button"
-                        onClick={this.updateRoom}
-                      ><span className="far fa-edit" /></button>
+      <Panel.Heading>
+        <Panel.Title componentClass="h3" toggle>Chat Rooms</Panel.Title>
+      </Panel.Heading>
+      <Panel.Collapse>
+        <Panel.Body>
+          <section className="room-list">
+            <ul>
+              {this.state.rooms.map( (room, index) =>
+                <li id={room.key} key={room.key} className={ room.key === this.props.activeRoom.key ? "active-room-selection" : "inactive-room-selection"}>
+                    <span className="room-name" roomkey={room.key} roomname={room.name} onClick={this.props.handleRoomSelect}>{room.name}</span>
+                    {this.props.user.admin &&
+                      <span className="room-buttons">
+                        <button
+                          id={"update" + room.key}
+                          className="update-button"
+                          onClick={this.updateRoom}
+                        ><span className="far fa-edit" /></button>
 
-                      <button
-                        id={"delete" + room.key}
-                        className="delete-button"
-                        onClick={this.deleteRoom}
-                      ><span className="far fa-trash-alt" /></button>
-                    </span>
-                  }
-                </li>
-            )}
-          </ul>
-        </section>
+                        <button
+                          id={"delete" + room.key}
+                          className="delete-button"
+                          onClick={this.deleteRoom}
+                        ><span className="far fa-trash-alt" /></button>
+                      </span>
+                    }
+                  </li>
+              )}
+            </ul>
+          </section>
 
-        {this.props.user.admin &&
-          <form className="new-room-form">
-            <h4>Create a New Room</h4>
-            <label htmlFor="new-room-name" className="input-label" id="new-room-name-label">New Room Name: </label>
-            <input
-              type="text"
-              className="room-name-input"
-              id="new-room-name"
-              placeholder="New room name..."
-             />
-            <input type="submit"
-              className="submit-button"
-              id="new-room-submit"
-              onClick={this.createNewRoom}
-            />
-          </form>
-        }
+          {this.props.user.admin &&
+            <form className="new-room-form">
+              <label htmlFor="new-room-name" className="input-label" id="new-room-name-label">New Room Name: </label>
+              <input
+                type="text"
+                className="room-name-input"
+                id="new-room-name"
+                placeholder="New room name..."
+               />
+              <input type="submit"
+                className="submit-button"
+                id="new-room-submit"
+                onClick={this.createNewRoom}
+              />
+            </form>
+          }
+          </Panel.Body>
+        </Panel.Collapse>
       </div>
 
     );

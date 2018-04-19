@@ -5,6 +5,7 @@ import RoomList from './components/RoomList';
 import MessageList from './components/MessageList';
 import UserAuth from './components/User/UserAuth';
 import UserList from './components/User/UserList';
+import { Grid, Col, Navbar, Panel, Alert } from 'react-bootstrap';
 
 // Initialize Firebase
 var config = {
@@ -23,7 +24,7 @@ class App extends Component {
 
     this.state = {
       activeRoom: {key: null, name: null},
-      user: { name: "Guest", email: "Guest", admin: false, photoUrl: "./img/default.png"}
+      user: { key: "Guest", name: "Guest", email: "Guest", admin: false, photoUrl: "./img/default.png"}
     }
   }
 
@@ -39,36 +40,73 @@ class App extends Component {
       name: activeRoomName
     }
 
+    this.state.user.email !== "Guest" &&
+      firebase.database()
+        .ref('users')
+        .child(this.state.user.key)
+        .update({
+          activeRoom: activeRoom.key
+        });
+
     this.setState({ activeRoom: activeRoom });
   }
 
   render() {
     return (
-      <div className="App">
+      <Grid className="App">
 
-      <UserAuth
-        firebase={firebase}
-        activeRoom={this.state.activeRoom}
-        user={this.state.user}
-        setUser={this.setUser}
-      />
-      <RoomList
-          firebase={firebase}
-          activeRoom={this.state.activeRoom}
-          user={this.state.user}
-          handleRoomSelect={this.handleRoomSelect}
-        />
-        <MessageList
-          firebase={firebase}
-          activeRoom={this.state.activeRoom}
-          user={this.state.user}
-        />
-        <UserList
-          firebase={firebase}
-          activeRoom={this.state.activeRoom}
-          user={this.state.user}
-        />
-      </div>
+          <div className="navbar navbar-default navbar-fluid navbar-static-top">
+            <Navbar.Header>
+              <Navbar.Brand className="brand">
+                Bloc Chat
+              </Navbar.Brand>
+            </Navbar.Header>
+            <UserAuth
+              firebase={firebase}
+              activeRoom={this.state.activeRoom}
+              user={this.state.user}
+              setUser={this.setUser}
+            />
+          </div>
+
+        <Col sm={4} lg={3} className="room-user-col">
+          <Panel>
+            <RoomList
+              firebase={firebase}
+              activeRoom={this.state.activeRoom}
+              user={this.state.user}
+              handleRoomSelect={this.handleRoomSelect}
+            />
+          </Panel>
+
+          <Panel>
+            <UserList
+              firebase={firebase}
+              activeRoom={this.state.activeRoom}
+              user={this.state.user}
+            />
+          </Panel>
+        </Col>
+
+        {!this.state.activeRoom.key &&
+          <Col sm={8} lg={6} className="alert-col">
+          <Alert>Please select a chat room</Alert>
+          </Col>
+        }
+        {this.state.activeRoom.key &&
+          <Col sm={8} lg={6} className="message-col">
+            <Panel className="message-panel">
+              <MessageList
+                firebase={firebase}
+                activeRoom={this.state.activeRoom}
+                user={this.state.user}
+              />
+            </Panel>
+          </Col>
+        }
+
+
+      </Grid>
     );
   }
 }

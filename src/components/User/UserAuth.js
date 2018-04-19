@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import UserRegister from './UserRegister';
+import { Nav, NavDropdown, MenuItem } from 'react-bootstrap';
 
 class UserAuth extends Component {
   constructor(props) {
@@ -17,15 +18,17 @@ class UserAuth extends Component {
     this.props.firebase.auth().onAuthStateChanged( authResult => {
       if(!authResult) {
         authResult = {
+          key: "Guest",
           name: "Guest",
           admin: false,
           email: "Guest",
+          photoUrl: "./img/default.png",
           username: "Guest"
         }
 
         this.props.setUser(authResult);
       }
-
+console.log(authResult)
       this.setState({ userAuth: authResult })
     });
   }
@@ -38,7 +41,10 @@ class UserAuth extends Component {
 
   signOut() {
     if(this.props.user.key) {
-      this.usersRef.child(this.props.user.key).update({online: false});
+      this.usersRef.child(this.props.user.key).update({
+        online: false,
+        activeRoom: ""
+      });
     }
 
     this.props.firebase.auth().signOut();
@@ -61,22 +67,23 @@ class UserAuth extends Component {
   render() {
     return (
       <section className="user-login">
-        <div className="active-user">
-          <strong>{this.props.user.email}</strong>
-        </div>
-          <button
-            className="button-sign-in"
-            onClick={() => this.signInWithPopup()}>Sign In</button>
-          <button
-            className="button-sign-out"
-            onClick={() => this.signOut()}>Sign Out</button>
-          <UserRegister
-            activeRoom={this.props.activeRoom}
-            userAuth={this.state.userAuth}
-            newLogin = {this.state.newLogin}
-            firebase={this.props.firebase}
-            handleRegistration={this.handleRegistration}
-          />
+        <Nav pullRight>
+          <NavDropdown title={this.props.user.email} id="basic-nav-dropdown">
+          {this.props.user.email !== "Guest" ?
+            <MenuItem onClick={() => this.signOut()}>Sign Out</MenuItem>
+            :
+            <MenuItem onClick={() => this.signInWithPopup()}>Sign In</MenuItem>
+          }
+          </NavDropdown>
+        </Nav>
+
+        <UserRegister
+          activeRoom={this.props.activeRoom}
+          userAuth={this.state.userAuth}
+          newLogin={this.state.newLogin}
+          firebase={this.props.firebase}
+          handleRegistration={this.handleRegistration}
+        />
 
       </section>
     )
